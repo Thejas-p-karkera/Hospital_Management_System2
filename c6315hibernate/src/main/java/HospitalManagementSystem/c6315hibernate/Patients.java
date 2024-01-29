@@ -22,8 +22,9 @@ public class Patients
 	@Column(name="Patient_Gender", nullable = false)
 	private String gender;
 	
+	@Column(name="disease", nullable=false)
+	private String disease;
 	
-
 	public int getId()
 	{
 		return Id;
@@ -64,15 +65,19 @@ public class Patients
 		this.gender = gender;
 	}
 	
+	public String getDisease()
+	{
+		return disease;
+	}
 	
+	public void setDisease(String disease)
+	{
+		this.disease = disease;
+	}
 	
 	@Override
 	public String toString()
 	{
-		return "\nName = " +name+ "\nAge = " +age+ "\nGender = " +gender ;
+		return "\nName = " +name+ "\nAge = " +age+ "\nGender = " +gender+"\ndisease = "+disease ;
 	}
-	
-	
-	
-	
 }
