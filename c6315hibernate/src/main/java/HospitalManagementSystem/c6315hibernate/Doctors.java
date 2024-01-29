@@ -71,6 +71,4 @@ public class Doctors
 			return "Doctor id=" + id + "\nname=" + name + "\ndepartment=" + department + "\nexperience=" + experience+"\n";
 
 		}
-	    
-	
 }
