@@ -30,18 +30,9 @@ public class Admin
         return userName;
     }
 
-//    public void setUserName(String userName)
-//    {
-//        this.userName = userName;
-//    }
-
     public static int getPassword()
     {
         return password;
     }
 
-//    public void setPassword(int password)
-//    {
-//        this.password = password;
-//    }
 }
