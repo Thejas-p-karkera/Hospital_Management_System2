@@ -1,7 +1,5 @@
 package HospitalManagementSystem.c6315hibernate;
 
-//import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -93,7 +91,6 @@ public class Appointments {
 		this.doctors = doctor;
 	}
 
-	
 	@Override
 	public String toString()
 	{
