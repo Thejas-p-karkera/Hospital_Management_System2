@@ -6,141 +6,126 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-//import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "billing")
 public class Billing
 {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Billing_Id")
-	private int id;
-	
-	@Column(name = "Appointment_Id", nullable = false)
-	private int appointmentId;
-	
-//	@Column(name = "Patient_Name")
-//	private int patientName;
-//
-//	@Column(name = "Doctor_Name")
-//	private int doctorName;
-//	
-//	@Column(name = "Appointment_Date")
-//	private String appointmentDate;
-	
-	@Column(name = "Billing_Amount", nullable = false)
-	private long amount;
-	
-	@OneToOne
-	@JoinColumn(name = "Appointment_Id", referencedColumnName = "Id", insertable = false, updatable = false)
-	private Appointments appointments;
-	
-//	@ManyToOne
-//	@JoinColumn(name = "Patient_Name", referencedColumnName = "name", insertable = false, updatable = false)
-//	private Patients patients;
-//
-//	@ManyToOne
-//	@JoinColumn(name = "Doctor_Name", referencedColumnName = "name", insertable = false, updatable = false)
-//	private Doctors doctors;
-	
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Billing_Id")
+    private int id;
 
-	public int getId()
-	{
-		return id;
-	}
+    @Column(name = "Billing_Amount", nullable = false)
+    private long amount;
 
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+    @Column(name = "Appointment_Id", nullable = false)
+    private int appointmentId;
 
-	public int getAppointmentId()
-	{
-		return appointmentId;
-	}
+    @Column(name = "Patient_Name")
+    private String patientName;
 
-	public void setAppointmentId(int appointmentId)
-	{
-		this.appointmentId = appointmentId;
-	}
+    @Column(name = "Doctor_Name")
+    private String doctorName;
 
-//	public int getPatientName()
-//	{
-//		return patientName;
-//	}
-//
-//	public void setPatientName(int patientName)
-//	{
-//		this.patientName = patientName;
-//	}
-//
-//	public int getDoctorName() {
-//		return doctorName;
-//	}
-//
-//	public void setDoctorName(int doctorName)
-//	{
-//		this.doctorName = doctorName;
-//	}
-//
-//	public String getAppointmentDate()
-//	{
-//		return appointmentDate;
-//	}
-//
-//	public void setAppointmentDate(String appointmentDate)
-//	{
-//		this.appointmentDate = appointmentDate;
-//	}
+    @OneToOne
+    @JoinColumn(name = "Appointment_Id", referencedColumnName = "Id", insertable = false, updatable = false)
+    private Appointments appointments;
 
-	public long getAmount()
-	{
-		return amount;
-	}
+    @OneToOne
+    @JoinColumn(name = "Patient_Id", referencedColumnName = "Id", insertable = false, updatable = false)
+    private Patients patients;
 
-	public void setAmount(long amount)
-	{
-		this.amount = amount;
-	}
+    @OneToOne
+    @JoinColumn(name = "Doctor_Id", referencedColumnName = "Id", insertable = false, updatable = false)
+    private Doctors doctors;
 
-	public Appointments getAppointments()
-	{
-		return appointments;
-	}
+    public int getId()
+    {
+        return id;
+    }
 
-	public void setAppointments(Appointments appointments)
-	{
-		this.appointments = appointments;
-	}
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 
-//	public Patients getPatients()
-//	{
-//		return patients;
-//	}
-//
-//	public void setPatients(Patients patients)
-//	{
-//		this.patients = patients;
-//	}
-//
-//	public Doctors getDoctors()
-//	{
-//		return doctors;
-//	}
-//
-//	public void setDoctors(Doctors doctors)
-//	{
-//		this.doctors = doctors;
-//	}
+    public int getAppointmentId()
+    {
+        return appointmentId;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "Billing id=" + id + "\nappointmentId=" + appointmentId  +"\namount=" + amount;
-	}
-	
-	
-	
+    public void setAppointmentId(int appointmentId)
+    {
+        this.appointmentId = appointmentId;
+    }
+
+    public String getPatientName()
+    {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName)
+    {
+        this.patientName = patientName;
+    }
+
+    public String getDoctorName()
+    {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName)
+    {
+        this.doctorName = doctorName;
+    }
+
+    public long getAmount()
+    {
+        return amount;
+    }
+
+    public void setAmount(long amount)
+    {
+        this.amount = amount;
+    }
+
+    public Appointments getAppointments()
+    {
+        return appointments;
+    }
+
+    public void setAppointments(Appointments appointments)
+    {
+        this.appointments = appointments;
+    }
+
+    public Patients getPatients()
+    {
+        return patients;
+    }
+
+    public void setPatients(Patients patients)
+    {
+        this.patients = patients;
+    }
+
+    public Doctors getDoctors()
+    {
+        return doctors;
+    }
+
+    public void setDoctors(Doctors doctors)
+    {
+        this.doctors = doctors;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Billing [id=" + id + ", amount=" + amount + ", appointmentId=" + appointmentId + ", appointments="
+                + appointments + ", patients=" + patients + ", doctors=" + doctors + "]";
+    }
 }
