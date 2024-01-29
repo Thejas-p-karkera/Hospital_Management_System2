@@ -43,6 +43,10 @@ public class HospitalManagementSystem
 		String gender = scanner.next();
 		p.setGender(gender);
 		
+		System.out.println("Enter Disease: ");
+		String disease = scanner.next();
+		p.setDisease(disease);
+		
 		session.save(p);
 		
 		Transaction transaction = session.beginTransaction();
@@ -77,11 +81,11 @@ public class HospitalManagementSystem
 			System.out.println("\nPatient Details:");
 			System.out.println("==================");
 			
-			System.out.println("+----+------------------+-------------+----------------+");
-			System.out.println("| id |   Patient_Name   | Patient_Age | Patient_Gender |");
-			System.out.println("+----+------------------+-------------+----------------+");
-			System.out.printf("| %-2s | %-16s | %-11s | %-14s |\n",p.getId(), p.getName(), p.getAge(), p.getGender());
-			System.out.println("+----+------------------+-------------+----------------+");
+			System.out.println("+----+------------------+-------------+----------------+----------------------+");
+			System.out.println("| id |   Patient_Name   | Patient_Age | Patient_Gender |       Disease        |");
+			System.out.println("+----+------------------+-------------+----------------+----------------------+");
+			System.out.printf("| %-2s | %-16s | %-11s | %-14s | %-20s |\n",p.getId(), p.getName(), p.getAge(), p.getGender(),p.getDisease());
+			System.out.println("+----+------------------+-------------+----------------+----------------------+");
 		}
 	}
 	
@@ -99,19 +103,19 @@ public class HospitalManagementSystem
 		else
 		{
 			System.out.println("\nPatient Details:");
-			System.out.println("==================");
+			System.out.println("================");
 			
-			System.out.println("+----+------------------+-------------+----------------+");
-			System.out.println("| id |   Patient_Name   | Patient_Age | Patient_Gender |");
-			System.out.println("+----+------------------+-------------+----------------+");
+			System.out.println("+----+------------------+-------------+----------------+----------------------+");
+			System.out.println("| id |   Patient_Name   | Patient_Age | Patient_Gender |       Disease        |");
+			System.out.println("+----+------------------+-------------+----------------+----------------------+");
 		
 		for(Patients p : data)
 		{
-			System.out.printf("| %-2s | %-16s | %-11s | %-14s |\n",p.getId(), p.getName(), p.getAge(), p.getGender());
+			System.out.printf("| %-2s | %-16s | %-11s | %-14s | %-20s |\n",p.getId(), p.getName(), p.getAge(), p.getGender(),p.getDisease());
 		}
 		
 		
-		System.out.println("+----+------------------+-------------+----------------+");
+		System.out.println("+----+------------------+-------------+----------------+----------------------+");
 		}
 
 	}
@@ -125,7 +129,7 @@ public class HospitalManagementSystem
 			System.out.println("---------------------------------------------");
 			System.out.println("1. View Particular Patient.");
 			System.out.println("2. View All Patients.");
-			System.out.println("3. Exit.");
+			System.out.println("3. Back.");
 			System.out.print("\nEnter your Choice: ");
 			
 			try
@@ -269,7 +273,41 @@ public class HospitalManagementSystem
 			session.close();
 //			scanner.close();
 		}
+	}
+	
+	public static void updatePatientDisease()
+	{
+		scanner = new Scanner(System.in);
 		
+		configuration = new Configuration();
+		configuration.configure();
+		
+		SessionFactory sessionFactory = configuration.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		System.out.print("Enter Patient Id to Update Disease: ");
+		int id = scanner.nextInt();
+		scanner.nextLine();
+		
+		Patients p = session.get(Patients.class, id); //returns Doctor type of object
+		if( p == null)
+		{
+			System.out.println("There is no Record Found for This Id.");
+		}
+		else
+		{
+			Transaction transaction = session.beginTransaction();
+			
+			System.out.print("Enter the Disease to be updated for Patient_Id "+id+": ");
+			String Disease = scanner.next();
+			p.setDisease(Disease);
+			session.update(p);
+//			session.merge(d);
+			
+			System.out.println("Patient's Disease Updated Successfully.");
+			transaction.commit();
+			session.close();
+//			scanner.close();
+		}
 	}
 	
 
@@ -292,7 +330,8 @@ public class HospitalManagementSystem
 			System.out.println("1. Patient Name.");
 			System.out.println("2. Patient Age.");
 			System.out.println("3. Patient Gender.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Patient Disease");
+			System.out.println("5. Back.");
 			System.out.print("Enter your Choice: ");
 			
 			try
@@ -317,6 +356,11 @@ public class HospitalManagementSystem
 					break;
 					
 				case 4:
+					updatePatientDisease();
+					System.out.println();
+					break;
+					
+				case 5:
 					return;
 					
 				default:
@@ -435,7 +479,7 @@ public class HospitalManagementSystem
 			System.out.println("----------------------------------------------");
 			System.out.println("1. Delete Particular Patient.");
 			System.out.println("2. Delete All Patients.");
-			System.out.println("3. Exit.");
+			System.out.println("3. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			try
@@ -537,7 +581,7 @@ public class HospitalManagementSystem
 			System.out.println("+-----+-----------------+-----------------+------------+");
 			System.out.println("| id  | Name            | Department      |Experience  |");
 			System.out.println("+-----+-----------------+-----------------+------------+");
-	        System.out.printf("| %-3s | %-15s | %-15s | %-10s |\n", d.getId(), d.getName(), d.getDepartment(),  d.getExperience());
+	        System.out.printf("| %-3s | %-15s | %-15s | %-10s |\n", d.getId(), d.getName(), d.getDepartment(),  d.getExperience()+" years");
 		    System.out.println("+-----+-----------------+-----------------+------------+");
 		}
 	}
@@ -548,14 +592,15 @@ public class HospitalManagementSystem
 		String hqlQuery = "from Doctors";
 		List<Doctors> data = session.createQuery(hqlQuery, Doctors.class).list();
 		
+		
 		if(data.isEmpty())
 		{
 			System.out.println("There is no Doctors Found");
 		}
 		else
 		{
-			System.out.println("\nDoctor Details:");
-			System.out.println("==================");
+//			System.out.println("\nDoctor Details:");
+//			System.out.println("==================");
 			
 			System.out.println("+-----+-----------------+-----------------+------------+");
 			System.out.println("| id  | Name            | Department      |Experience  |");
@@ -563,7 +608,7 @@ public class HospitalManagementSystem
 			
 		    for (Doctors d : data)
 		    {
-		        System.out.printf("| %-3s | %-15s | %-15s | %-10s |\n", d.getId(), d.getName(), d.getDepartment(),  d.getExperience());
+		        System.out.printf("| %-3s | %-15s | %-15s | %-10s |\n", d.getId(), d.getName(), d.getDepartment(),  d.getExperience()+" years");
 		    }
 
 		    System.out.println("+-----+-----------------+-----------------+------------+");
@@ -579,7 +624,7 @@ public class HospitalManagementSystem
 			System.out.println("--------------------------------------------");
 			System.out.println("1. View Particular Doctor.");
 			System.out.println("2. View All Doctors.");
-			System.out.println("3. Exit.");
+			System.out.println("3. Back.");
 			System.out.print("\nEnter your Choice: ");
 			
 			try
@@ -594,6 +639,8 @@ public class HospitalManagementSystem
 					break;
 					
 				case 2:
+					System.out.println("\nDoctor Details:");
+					System.out.println("===============");
 					viewAllDoctors();
 					System.out.println();
 					break;
@@ -743,7 +790,7 @@ public class HospitalManagementSystem
 			System.out.println("1. Doctor Name.");
 			System.out.println("2. Doctor Department.");
 			System.out.println("3. Doctor Experience.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Back.");
 			System.out.print("Enter your Choice: ");
 			
 			try
@@ -886,7 +933,7 @@ public class HospitalManagementSystem
 			System.out.println("----------------------------------------------");
 			System.out.println("1. Delete Particular Doctor.");
 			System.out.println("2. Delete All Doctors.");
-			System.out.println("3. Exit.");
+			System.out.println("3. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			try
@@ -948,11 +995,23 @@ public class HospitalManagementSystem
 			System.out.println("Invalid Patient Id.. Please Enter a Valid Id.");
 			return;
 		}
+		else
+		{
+			System.out.println("Patient Name 	: "+p.getName());
+			System.out.println("Patient Age 	: "+p.getAge());
+			System.out.println("Patient Gender  : "+p.getGender());
+			System.out.println("Patient Disease : "+p.getDisease());
+			
+			System.out.println("\nSelect Doctor for Appointment:");
+			System.out.println("==============================");
+			viewAllDoctors();
+			
+		}
 	//If patient ID exists,Then 		
 		a.setPatientId(patientId);
 		
 		
-		System.out.print("Enter Doctor Id : ");
+		System.out.print("\nEnter Doctor Id : ");
 		int doctorId = scanner.nextInt();
 		
 	// Check if the Doctor ID exists in the patients table
@@ -1002,7 +1061,7 @@ public class HospitalManagementSystem
 		else
 		{
 			System.out.println("\nAppointment Details:");
-			System.out.println("======================");
+			System.out.println("====================");
 			
 			System.out.println("+----+------------+------------------+-----------+-----------------+------------------+");
 			System.out.println("| Id | Patient_id | Patient_Name     | Doctor_id | Doctor_Name     | Appointment_date |");
@@ -1033,7 +1092,6 @@ public class HospitalManagementSystem
 			System.out.println("+----+------------+------------------+-----------+-----------------+------------------+");
 			System.out.println("| Id | Patient_id | Patient_Name     | Doctor_id | Doctor_Name     | Appointment_date |");
 			System.out.println("+----+------------+------------------+-----------+-----------------+------------------+");
-
 			
 	    for (Object[] row : data)
 	    {
@@ -1052,7 +1110,7 @@ public class HospitalManagementSystem
 			System.out.println("--------------------------------------------------");
 			System.out.println("1. View Particular Appointment.");
 			System.out.println("2. View All Appointments.");
-			System.out.println("3. Exit.");
+			System.out.println("3. Back.");
 			System.out.print("\nEnter your Choice: ");
 			
 			try
@@ -1244,7 +1302,7 @@ public class HospitalManagementSystem
 			System.out.println("1. Patient Details.");
 			System.out.println("2. Doctor Details.");
 			System.out.println("3. Appointment Date.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Back.");
 			System.out.print("Enter your Choice: ");
 			
 			try
@@ -1373,7 +1431,7 @@ public class HospitalManagementSystem
 			System.out.println("---------------------------------------------------");
 			System.out.println("1. Delete Particular Appointment.");
 			System.out.println("2. Delete All Appointments.");
-			System.out.println("3. Exit.");
+			System.out.println("3. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			try
@@ -1460,47 +1518,167 @@ public class HospitalManagementSystem
 		            System.out.println("Failed to Generate Bill!");
 		        }
 			}
-			
-		
-			
-		
-		
-//   	catch(ConstraintViolationException e)
-//	{
-//		
-//		System.out.println("Please check the Appointment Id you entered");
-//	}
-		
 	}
+	
+	
+	public static void viewBillById()
+	{
+	    System.out.print("\nEnter Billing Id: ");
+	    int id = scanner.nextInt();
+
+	    String hqlQuery = "SELECT b.id, b.appointmentId, a.patientId, p.name, a.doctorId, d.name, a.appointmentDate, b.amount " +
+	                   "FROM Billing b " +
+	                   "JOIN Appointments a ON b.appointmentId = a.id " +
+	                   "JOIN Patients p ON a.patientId = p.id " +
+	                   "JOIN Doctors d ON a.doctorId = d.id " +
+	                   "WHERE b.id = :id";
+
+	    List<Object[]> data = session.createQuery(hqlQuery, Object[].class).setParameter("id", id).getResultList();
+
+	    if (data.isEmpty())
+	    {
+	        System.out.println("There are no records found.");
+	    }
+	    else
+	    {
+	        System.out.println("\nBilling Details:");
+	        System.out.println("======================");
+
+	        System.out.println("+------------+----------------+------------+--------------+-----------+-------------+------------------+----------------+");
+	        System.out.println("| Billing_Id | Appointment_Id | Patient_Id | Patient_Name | Doctor_Id | Doctor_Name | Appointment_Date | Billing_Amount |");
+	        System.out.println("+------------+----------------+------------+--------------+-----------+-------------+------------------+----------------+");
+
+	        for (Object[] row : data)
+	        {
+	            System.out.printf("| %-10s | %-14s | %-10s | %12s | %-9s | %-11s | %-16s | %-14s |\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6],"Rs. " + row[7]);
+	        }
+
+	        System.out.println("+------------+----------------+------------+--------------+-----------+-------------+------------------+----------------+");
+	    }
+	}
+
 	
 	
 	public static void viewAllBills()
 	{
-		
+	    String hqlQuery = "SELECT b.id, b.appointmentId, p.id AS patientId, p.name AS patientName, d.id AS doctorId, d.name AS doctorName, a.appointmentDate, b.amount"
+	            + " FROM Billing b JOIN b.appointments a JOIN a.patients p JOIN a.doctors d";
+	    List<Object[]> data = session.createQuery(hqlQuery, Object[].class).list();
+	    if (data.isEmpty())
+	    {
+	        System.out.println("There are no records found.");
+	    } 
+	    else
+	    {
+	        System.out.println("\nBilling Details:");
+	        System.out.println("======================");
+
+	        System.out.println("+------------+----------------+------------+--------------+-----------+-------------+------------------+----------------+");
+	        System.out.println("| Billing_Id | Appointment_Id | Patient_Id | Patient_Name | Doctor_Id | Doctor_Name | Appointment_Date | Billing_Amount |");
+	        System.out.println("+------------+----------------+------------+--------------+-----------+-------------+------------------+----------------+");
+
+	        for (Object[] row : data) {
+	            System.out.printf("| %-10s | %-14s | %-10s | %12s | %-9s | %-11s | %-16s | %-14s |\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6],"Rs. " +row[7]);
+	        }
+
+	        System.out.println("+------------+----------------+------------+--------------+-----------+-------------+------------------+----------------+");
+	    }
 	}
 	
+	public static void updateBillAmount()
+	{
+		scanner = new Scanner(System.in);
+		
+		configuration = new Configuration();
+		configuration.configure();
+		
+		SessionFactory sessionFactory = configuration.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		System.out.print("Enter Billing Id to Update the Amount: ");
+		int id = scanner.nextInt();
+		scanner.nextLine();
+		
+		Billing b = session.get(Billing.class, id); //returns Doctor type of object
+		if( b == null)
+		{
+			System.out.println("There is no Record Found for This Id.");
+		}
+		else
+		{
+			Transaction transaction = session.beginTransaction();
+			
+			System.out.print("Enter the Updated Amount for Billing_Id "+id+": ");
+			long amount = scanner.nextLong();
+			b.setAmount(amount);
+			session.update(b);
+//			session.merge(d);
+			
+			System.out.println("Amount Updated Successfully.");
+			transaction.commit();
+			session.close();
+		}
+		
+	}
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public static void Billing()
+	{
+		while(true)
+		{
+			System.out.println("\nSelect What you want to do in Billing Section");
+			System.out.println("-----------------------------------------------");
+			System.out.println("1. Generate Bill.");
+			System.out.println("2. View particular Billing Record.");
+			System.out.println("3. View All Billing Records.");
+			System.out.println("4. Update Billing Amount.");
+			System.out.println("5. Back");
+			System.out.println("\nEnter Your Choice: ");
+			
+			try
+			{
+				int choice = scanner.nextInt();
+				
+				switch(choice)
+				{
+				case 1:
+					generateBill();
+					System.out.println();
+					break;
+					
+				case 2:
+					viewBillById();
+					System.out.println();
+					break;
+					
+				case 3:
+					viewAllBills();
+					System.out.println();
+					break;
+					
+				case 4:
+					updateBillAmount();
+					System.out.println();
+					break;
+					
+				case 5:
+					return;
+				
+				default:
+					System.out.println("Invalid Choice! ..Enter a Valid Choice.");
+					System.out.println();
+					break;			
+				}
+			}
+			
+			catch(InputMismatchException e)
+			{
+				System.out.println("Please Enter a Integer Value.");
+				System.out.println();
+				scanner.nextLine();
+			}
+		
+		}
+	}
 	
 //	-------------------------------------------------------------------------------------------------------
 	
@@ -1514,7 +1692,7 @@ public class HospitalManagementSystem
 			System.out.println("1. Patients Record.");
 			System.out.println("2. Doctors Record.");
 			System.out.println("3. Appointments Record.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			try
@@ -1568,7 +1746,7 @@ public class HospitalManagementSystem
 			System.out.println("1. Patients Record.");
 			System.out.println("2. Doctors Record.");
 			System.out.println("3. Appointments Record.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			try
@@ -1621,7 +1799,7 @@ public class HospitalManagementSystem
 			System.out.println("1. Patients Record.");
 			System.out.println("2. Doctors Record.");
 			System.out.println("3. Appointments Record.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			try
@@ -1673,7 +1851,7 @@ public class HospitalManagementSystem
 			System.out.println("1. Patients Record.");
 			System.out.println("2. Doctors Record.");
 			System.out.println("3. Appointments Record.");
-			System.out.println("4. Exit.");
+			System.out.println("4. Back.");
 			System.out.print("\nEnter Your Choice: ");
 			
 			int choice = scanner.nextInt();
@@ -1782,7 +1960,7 @@ public class HospitalManagementSystem
 						break;
 						
 					case 5:
-						generateBill();
+						Billing();
 						System.out.println();
 						break;
 						
@@ -1811,62 +1989,5 @@ public class HospitalManagementSystem
 			System.out.println("Incorrect Username or Password");
 		}
 		
-		
-//		while(true)
-//		{
-//			System.out.println("===========================");
-//			System.out.println("HOSPITAL MANAGEMENT SYSTEM");
-//			System.out.println("===========================");
-//			System.out.println("Select What You Want TO Do");
-//			System.out.println("1. Create Records.");
-//			System.out.println("2. Read Records.");
-//			System.out.println("3. Update Records.");
-//			System.out.println("4. Delete Records.");
-//			System.out.println("5. Exit.");
-//			System.out.print("\nEnter Your Choice: ");
-//			
-//			try
-//			{
-//				int choice = scanner.nextInt();
-//				
-//				switch(choice)
-//				{
-//				case 1:
-//					create();
-//					System.out.println();
-//					break;
-//					
-//				case 2:
-//					read();
-//					System.out.println();
-//					break;
-//					
-//				case 3:
-//					update();
-//					System.out.println();
-//					break;	
-//					
-//				case 4:
-//					delete();
-//					System.out.println();
-//					break;
-//					
-//				case 5:
-//					return;
-//					
-//				default:
-//					System.out.println("Invalid Choice! ..Enter a Valid Choice.");
-//					System.out.println();
-//					break;
-//				}
-//			}
-//			
-//			catch(InputMismatchException e)
-//			{
-//				System.out.println("Please Enter a Integer Value.");
-//				System.out.println();
-//				scanner.nextLine();
-//			}
-//		}
 	}
 }
